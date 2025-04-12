@@ -1,7 +1,10 @@
 import express from "express";
+import "dotenv/config";
 
-const SERVER_PORT = process.env.SERVER_PORT || 3000;
+const SERVER_PORT = parseInt(process.env.SERVER_PORT) || 3000;
 const HOST = process.env.HOST || "localhost";
+
+console.log(`환경변수 사용: SERVER_PORT=${SERVER_PORT}, Host=${HOST}`);
 
 const app = express();
 
