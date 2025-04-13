@@ -16,6 +16,14 @@ app.get("/", (req, res) => {
 
 const server = app.listen(SERVER_PORT, HOST);
 
+server.on("error", (error) => {
+  if (error.syscall === "listen") {
+    console.error("Error: Server failed to start.", error);
+  } else {
+    console.error("Error: An unexpected error occurred.", error);
+  }
+});
+
 server.on("listening", () => {
   try {
     const addressInfo = server.address();
