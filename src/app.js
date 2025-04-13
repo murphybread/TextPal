@@ -22,6 +22,17 @@ server.on("error", (error) => {
   } else {
     console.error("Error: An unexpected error occurred.", error);
   }
+
+  switch (error.code) {
+    case "EADDRINUSE":
+      console.error(`Error: Port ${SERVER_PORT} is already in use.`);
+      break;
+    case "EACCES":
+      console.error(`Error: Permission denied for port ${SERVER_PORT}.`);
+      break;
+    default:
+      console.error("Error: An unexpected error occurred.", error);
+  }
 });
 
 server.on("listening", () => {
@@ -31,7 +42,7 @@ server.on("listening", () => {
       const bindAddress = addressInfo.address;
       const bindPort = addressInfo.port;
 
-      console.log("✅ 서버 리스닝 성공!");
+      console.log("서버 리스닝 성공!");
       console.log(`   - 주소: ${bindAddress}`);
       console.log(`   - 포트: ${bindPort}`);
       console.log(`   - 접속 URL (로컬): http://${bindAddress === "::1" || bindAddress === "127.0.0.1" ? "localhost" : bindAddress}:${bindPort}`);
