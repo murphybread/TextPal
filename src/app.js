@@ -1,16 +1,22 @@
 import express from "express";
 import "dotenv/config";
+import morgan from "morgan";
+import { logger, stream } from "../config/logger.js";
 
 const SERVER_PORT = parseInt(process.env.SERVER_PORT) || 3000;
 const HOST = process.env.HOST || "localhost";
 
-console.log(`환경변수 사용: SERVER_PORT=${SERVER_PORT}, Host=${HOST}`);
+logger.info(`환경변수 사용: SERVER_PORT=${SERVER_PORT}, Host=${HOST}`);
 
 const app = express();
 
+// Register middlewares
+const morganFormat = process.env.NODE_ENV === "development" ? "dev" : "combined";
+app.use(morgan(morganFormat, { stream: stream }));
 app.use(express.json());
 
 app.get("/", (req, res) => {
+  logger.info("GET / 요청 처리");
   res.send("Hello World!");
 });
 
@@ -18,20 +24,20 @@ const server = app.listen(SERVER_PORT, HOST);
 
 server.on("error", (error) => {
   if (error.syscall === "listen") {
-    console.error("Error: Server failed to start.", error);
+    logger.error("Error: Server failed to start.", error);
   } else {
-    console.error("Error: An unexpected error occurred.", error);
+    logger.error("Error: An unexpected error occurred.", error);
   }
 
   switch (error.code) {
     case "EADDRINUSE":
-      console.error(`Error: Port ${SERVER_PORT} is already in use.`);
+      logger.error(`Error: Port ${SERVER_PORT} is already in use.`);
       break;
     case "EACCES":
-      console.error(`Error: Permission denied for port ${SERVER_PORT}.`);
+      logger.error(`Error: Permission denied for port ${SERVER_PORT}.`);
       break;
     default:
-      console.error("Error: An unexpected error occurred.", error);
+      logger.error("Error: An unexpected error occurred.", error);
   }
 });
 
@@ -42,14 +48,14 @@ server.on("listening", () => {
       const bindAddress = addressInfo.address;
       const bindPort = addressInfo.port;
 
-      console.log("서버 리스닝 성공!");
-      console.log(`   - 주소: ${bindAddress}`);
-      console.log(`   - 포트: ${bindPort}`);
-      console.log(`   - 접속 URL (로컬): http://${bindAddress === "::1" || bindAddress === "127.0.0.1" ? "localhost" : bindAddress}:${bindPort}`);
+      logger.info("서버 리스닝 성공!");
+      logger.info(`   - 주소: ${bindAddress}`);
+      logger.info(`   - 포트: ${bindPort}`);
+      logger.info(`   - 접속 URL (로컬): http://${bindAddress === "::1" || bindAddress === "127.0.0.1" ? "localhost" : bindAddress}:${bindPort}`);
     } else {
-      console.error("Error: Unable to retrieve address information.");
+      logger.error("Error: Unable to retrieve address information.");
     }
   } catch (error) {
-    console.error("Error occurred while starting the server:", error);
+    logger.error("Error occurred while starting the server:", error);
   }
 });
