@@ -11,7 +11,7 @@ logger.info(`환경변수 사용: SERVER_PORT=${SERVER_PORT}, Host=${HOST}`);
 const app = express();
 
 // Register middlewares
-const morganFormat = process.env.NODE_ENV === "development" ? "dev" : "combined";
+const morganFormat = process.env.NODE_ENV === "development" ? "combined" : "combined";
 app.use(morgan(morganFormat, { stream: stream }));
 app.use(express.json());
 
