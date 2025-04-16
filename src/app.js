@@ -2,6 +2,7 @@ import express from "express";
 import "dotenv/config";
 import morgan from "morgan";
 import { logger, stream } from "../config/logger.js";
+import rootRouter from "#routes/rootRoutes.js";
 
 const SERVER_PORT = parseInt(process.env.SERVER_PORT) || 3000;
 const HOST = process.env.HOST || "localhost";
@@ -15,10 +16,7 @@ const morganFormat = process.env.NODE_ENV === "development" ? "combined" : "comb
 app.use(morgan(morganFormat, { stream: stream }));
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  logger.info("GET / 요청 처리");
-  res.send("Hello World!");
-});
+app.use("/", rootRouter);
 
 const server = app.listen(SERVER_PORT, HOST);
 
