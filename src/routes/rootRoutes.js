@@ -1,6 +1,6 @@
 import express from "express";
 import { logger } from "#config/logger.js";
-import 
+
 const router = express.Router();
 
 router.get("/", (req, res) => {
