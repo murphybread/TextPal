@@ -17,11 +17,11 @@ async function testConnection() {
   try {
     console.log("데이터베이스 연결을 시도합니다...");
     client = await pool.connect();
-    console.log("✅ PostgreSQL 데이터베이스에 성공적으로 연결되었습니다!");
+    console.log("PostgreSQL 데이터베이스에 성공적으로 연결되었습니다!");
     const result = await client.query("SELECT NOW()");
-    console.log("🕒 현재 서버 시간:", result.rows[0].now);
+    console.log("현재 서버 시간:", result.rows[0].now);
   } catch (error) {
-    console.error("❌ 데이터베이스 연결 또는 쿼리 중 오류 발생:", error.message);
+    console.error("데이터베이스 연결 또는 쿼리 중 오류 발생:", error.message);
     console.error("   연결 정보 (비밀번호 제외):", {
       user: dbConfig.user,
       host: dbConfig.host,
@@ -32,7 +32,7 @@ async function testConnection() {
   } finally {
     if (client) {
       client.release();
-      console.log("🔗 연결이 Pool로 반납되었습니다.");
+      console.log("연결이 Pool로 반납되었습니다.");
     }
   }
   console.log("데이터베이스 풀을 닫습니다...");
