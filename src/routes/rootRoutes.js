@@ -1,7 +1,7 @@
-import express from "express";
+import { Router } from "express";
 import { logger } from "#config/logger.js";
 
-const router = express.Router();
+const router = Router();
 
 router.get("/", (req, res) => {
   logger.info("GET / 요청 처리");

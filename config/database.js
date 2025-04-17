@@ -10,7 +10,7 @@ const dbConfig = {
   port: process.env.DB_PORT,
 };
 
-const pool = new Pool(dbConfig);
+export const pool = new Pool(dbConfig);
 
 async function testConnection() {
   let client;
@@ -40,4 +40,4 @@ async function testConnection() {
   console.log("데이터베이스 풀이 닫혔습니다.");
 }
 
-testConnection();
+//  testConnection();

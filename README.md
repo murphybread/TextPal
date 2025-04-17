@@ -13,9 +13,18 @@ ServerSide
 - [x] server 동작시 error 이벤트처리 (listen이 되지 않는 error상황에서의 정보 제공)
 - [x] logger 설정 (morgan 및 winston으로 영구적인 서버이벤트 및 http request 정보 저징)
 - [x] DB 연결 (pg를 통해 로컬 DB와연결 .env활용)
-- [] routes 설정
-- [] controller 생성 (**controller는 stateless해야한다**)
-- [] model 생성
+- [x] **GET /users – 사용자 목록 조회 API** 개발
+
+  - [x] routes 설정 (`router.get('/', userController.listUsers)`)
+  - [x] controller 구현 (`listUsers`)
+  - [x] service 구현 (`getAllUsers`)
+  - [x] model 구현 (`findAllUsers`)
+
+- [x] **POST /users – 신규 사용자 생성 API** 개발
+  - [x] routes 설정 (`router.post('/', userController.createUser)`)
+  - [x] controller 구현 (`createUser`)
+  - [x] service 구현 (`createUser`)
+  - [x] model 구현 (`createUser`)
 
 단계를 여러번 나누는 이유: 좀 더 복잡한 기능을 만들기위해 필요한 관심사 분리를 기반으로 아키텍처를 설계하고싶기에
 

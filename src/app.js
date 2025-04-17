@@ -3,6 +3,7 @@ import "dotenv/config";
 import morgan from "morgan";
 import { logger, stream } from "../config/logger.js";
 import rootRouter from "#routes/rootRoutes.js";
+import userRouter from "#routes/userRoutes.js";
 
 const SERVER_PORT = parseInt(process.env.SERVER_PORT) || 3000;
 const HOST = process.env.HOST || "localhost";
@@ -17,6 +18,7 @@ app.use(morgan(morganFormat, { stream: stream }));
 app.use(express.json());
 
 app.use("/", rootRouter);
+app.use("/users", userRouter);
 
 const server = app.listen(SERVER_PORT, HOST);
 
