@@ -4,6 +4,8 @@ import morgan from "morgan";
 import { logger, stream } from "../config/logger.js";
 import rootRouter from "#routes/rootRoutes.js";
 import userRouter from "#routes/userRoutes.js";
+import session from "express-session";
+import sessionConfig from "#config/session.js";
 
 const SERVER_PORT = parseInt(process.env.SERVER_PORT) || 3000;
 const HOST = process.env.HOST || "localhost";
@@ -16,6 +18,7 @@ const app = express();
 const morganFormat = process.env.NODE_ENV === "development" ? "combined" : "combined";
 app.use(morgan(morganFormat, { stream: stream }));
 app.use(express.json());
+app.use(session(sessionConfig));
 
 app.use("/", rootRouter);
 app.use("/users", userRouter);

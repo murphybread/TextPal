@@ -28,14 +28,46 @@ ServerSide
 
 단계를 여러번 나누는 이유: 좀 더 복잡한 기능을 만들기위해 필요한 관심사 분리를 기반으로 아키텍처를 설계하고싶기에
 
-- [] 회원 가입 (DB 등록)
 - [] 세션 유지
-- [] 소셜 로그인인
+  - 사용자 인증을 다시 입력하지 않게하고, 장바구니 등과 같은 커스텀 정보값을 유지하기 위해 설정 필요
+  - 외부 세션저장 메모리를 쓰는것이 권장되지만 현재 단계에서는 간단하게 로컬서버에서 설정(서버가 내려가면 세션 정보 전부 사라짐짐)
+  - 세션 지원 미들웨어인 `express-session`으로 구현
+- [] 소셜 로그인
 
 app-> routes -> controller-> service -> model-> DB
 -> ORM 학습을 위해 Prisma 시도 schema생성 및 Prisma Client까지 생성 후 테스트해봄
 -> Prisma검색결과 2배에서 많게는 5배까지 퍼포먼스차이가나며, ORM만 쓰기에 쿼리튜닝이나 오버헤드 등으로DB 학습에는 부적합하다고판단
 -> pg로 사용하기로 결정
+
+#### 디렉토리 구조
+
+TextPal/
+├── babel.config.json
+├── observeSpecificError.js
+├── package.json
+├── README.md
+├── **test**/ # 테스트 파일 디렉토리
+├── config/ # 설정 파일 디렉토리
+│ ├── database.js # DB 설정
+│ └── logger.js # 로깅 설정
+├── logs/ # 로그 저장 디렉토리
+│ └── app.log
+├── migrations/ # DB 마이그레이션 파일
+│ └── 0001_set-updatedAt-default.sql
+├── public/ # 정적 파일 디렉토리
+└── src/ # 소스 코드 메인 디렉토리
+├── app.js # 애플리케이션 진입점
+├── api/  
+ │ └── users/ # 사용자 관련 API
+├── controllers/ # 컨트롤러 레이어
+│ └── userController.js
+├── models/ # 모델 레이어
+│ └── userModel.js
+├── routes/ # 라우팅 레이어
+│ ├── rootRoutes.js
+│ └── userRoutes.js
+└── services/ # 서비스 레이어
+└── userService.js
 
 # Neon DB
 

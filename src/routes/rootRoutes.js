@@ -8,4 +8,16 @@ router.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
+router.get("/session-test", (req, res) => {
+  logger.info("GET /session-test 요청 처리");
+
+  req.session.viewCount = (req.session.viewCount || 0) + 1;
+
+  res.json({
+    message: "세션 테스트 성공",
+    viewCount: req.session.viewCount,
+    sessionID: req.sessionID,
+  });
+});
+
 export default router;
