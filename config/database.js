@@ -27,11 +27,11 @@ export const neonPool = new Pool(dbNeonConfig);
 async function testConnection() {
   let client;
   try {
-    logger.info("데이터베이스 연결을 시도합니다..."); // Use logger.info
+    logger.info("데이터베이스 연결을 시도합니다...");
     client = await pool.connect();
-    logger.info("PostgreSQL 데이터베이스에 성공적으로 연결되었습니다!"); // Use logger.info
+    logger.info("PostgreSQL 데이터베이스에 성공적으로 연결되었습니다!");
     const result = await client.query("SELECT NOW()");
-    logger.info(`현재 서버 시간: ${result.rows[0].now}`); // Use logger.info
+    logger.info(`현재 서버 시간: ${result.rows[0].now}`);
   } catch (error) {
     logger.error(`데이터베이스 연결 또는 쿼리 중 오류 발생: ${error.message}`, {
       error: error,
@@ -46,22 +46,22 @@ async function testConnection() {
   } finally {
     if (client) {
       client.release();
-      logger.info("연결이 Pool로 반납되었습니다."); // Use logger.info
+      logger.info("연결이 Pool로 반납되었습니다.");
     }
   }
-  logger.info("데이터베이스 풀을 닫습니다..."); // Use logger.info
+  logger.info("데이터베이스 풀을 닫습니다...");
   await pool.end();
-  logger.info("데이터베이스 풀이 닫혔습니다."); // Use logger.info
+  logger.info("데이터베이스 풀이 닫혔습니다.");
 }
 
 async function testNeonConnection() {
   let client;
   try {
-    logger.info("Neon 데이터베이스 연결을 시도합니다..."); // Use logger.info
+    logger.info("Neon 데이터베이스 연결을 시도합니다...");
     client = await neonPool.connect();
-    logger.info("Neon PostgreSQL 데이터베이스에 성공적으로 연결되었습니다!"); // Use logger.info
+    logger.info("Neon PostgreSQL 데이터베이스에 성공적으로 연결되었습니다!");
     const result = await client.query("SELECT NOW()");
-    logger.info(`현재 서버 시간: ${result.rows[0].now}`); // Use logger.info
+    logger.info(`현재 서버 시간: ${result.rows[0].now}`);
   } catch (error) {
     logger.error(`Neon 데이터베이스 연결 또는 쿼리 중 오류 발생: ${error.message}`, {
       error: error,
@@ -76,12 +76,12 @@ async function testNeonConnection() {
   } finally {
     if (client) {
       client.release();
-      logger.info("Neon 연결이 Pool로 반납되었습니다."); // Use logger.info
+      logger.info("Neon 연결이 Pool로 반납되었습니다.");
     }
   }
-  logger.info("Neon 데이터베이스 풀을 닫습니다..."); // Use logger.info
+  logger.info("Neon 데이터베이스 풀을 닫습니다...");
   await neonPool.end();
-  logger.info("Neon 데이터베이스 풀이 닫혔습니다."); // Use logger.info
+  logger.info("Neon 데이터베이스 풀이 닫혔습니다.");
 }
 
 //  testConnection();
