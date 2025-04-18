@@ -33,3 +33,6 @@ ServerSide
 - [] 소셜 로그인인
 
 app-> routes -> controller-> service -> model-> DB
+-> ORM 학습을 위해 Prisma 시도 schema생성 및 Prisma Client까지 생성 후 테스트해봄
+-> Prisma검색결과 2배에서 많게는 5배까지 퍼포먼스차이가나며, ORM만 쓰기에 쿼리튜닝이나 오버헤드 등으로DB 학습에는 부적합하다고판단
+-> pg로 사용하기로 결정
