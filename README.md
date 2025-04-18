@@ -36,3 +36,22 @@ app-> routes -> controller-> service -> model-> DB
 -> ORM 학습을 위해 Prisma 시도 schema생성 및 Prisma Client까지 생성 후 테스트해봄
 -> Prisma검색결과 2배에서 많게는 5배까지 퍼포먼스차이가나며, ORM만 쓰기에 쿼리튜닝이나 오버헤드 등으로DB 학습에는 부적합하다고판단
 -> pg로 사용하기로 결정
+
+# Neon DB
+
+무료 웹 호스팅 DB. Local에서 sql조작, 테스트 등을 수행하지만 나중에 퍼블릭한 상황에 대응하기 위한 무료 serverless DB 호스팅
+190컴퓨팅시간이 무료이며 개발 환경스펙은 0.25컴퓨팅 시간을 사용함으로 약 31일동안 full로 돌려도 괜찮은 수준.
+
+[Free plan](https://supabase.com/pricing)
+
+- size: 500MB
+- API request: unlimited
+
+[Computing Unit](https://neon.tech/docs/introduction/usage-metrics#compute)
+1 vCPU 컴퓨트가 1시간 동안 활성 상태가 1CU이며,각 vCPU마다 RAM 크기가 고정됨. 0.25vCPU는 1GB이며 1vCPU당 4GB
+
+Free plan 무료 CU: https://neon.tech/docs/introduction/plans#free-plan
+
+[기본 연결시간](https://neon.tech/docs/connect/connection-latency?utm_source=chatgpt.com#check-the-status-of-a-compute)
+5분. Free plan은 늘리거나 줄이기 변경불가.
+serverless 방식임으로 첫 연결 cold start이후 5분간 활성화되고, activity가 되는 시간으로 무료 CU 자원 소모
