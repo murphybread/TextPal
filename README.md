@@ -183,6 +183,33 @@ TextPal/
 └── services/ # 서비스 레이어
 └── userService.js
 
+# DDL 작업은 migration에서 수행
+
+테이블의 생성, 스키마의 변경등의 작업은 model이 아닌 버전관리를 위해 migration디렉토리의 `node-pg-migrate`를 통해 수행
+데이터에 대한 CRUD만 `pg`로 수행
+
+## 고민 어떤 migration 툴을 사용해야하는가?
+
+테이블의 생성, 스키마의 관리를 위해 툴을 정해야하는데 처음에는 `node-pg-migrate`만 고려했다가 다른 옵션이이있는지 탐색.
+검색 결과 무수히 많은 옵션,장점,단점이있음을 확인인
+
+#### [레딧 유저의 ORM없이 어떤 migration툴을 사용하는지에대한 쓰레드](https://www.reddit.com/r/node/comments/18gktjm/what_do_you_use_for_sql_db_migrations/)
+
+가장 자주 언급된 툴들
+
+- `Knex`: SQL 쿼리 빌더이지만 마이그레이션 기능도 많이 사용됩니다.
+- `node-pg-migrate`: 특히 PostgreSQL 사용자들에게 언급되며, "straightforward(직관적이고 단순함)"하다는 긍정적인 평가가 있습니다.
+- `Dbmate`: 사용하기 좋고, 다른 대안들과 비교표를 제공한다는 점이 언급되었습니다.
+- `Flyway` / `Liquibase`: 언어나 프레임워크에 구애받지 않는 범용적인 데이터베이스 마이그레이션 도구들로, 특히 Flyway는 "no complaints(불만 없음)"이라는 의견이 있었습니다.
+- `Graphile Migrate`: PostgreSQL에 초점을 맞춘 또 다른 도구로 언급되었습니다.
+
+ORM 도구의 마이그레이션 기능만 사용
+
+- Prisma나 TypeORM과 같은 ORM의 쿼리 빌더 기능은 사용하지 않더라도, 해당 ORM이 제공하는 마이그레이션 시스템만 별도로 사용하는 경우도 있다는 의견이 있었습니다.
+- Prisma의 경우 스키마 관리 및 제너레이터를 통한 타입 생성 등에 유용하다는 의견이 있습니다.
+
+> 결론은 `node-pg-migrate`이 가지는 장점(안정성, PostgreSQL 특화, SQL 친화성,관리하기 편함)이 큼으로 해당 툴 사용
+
 # Neon DB
 
 무료 웹 호스팅 DB. Local에서 sql조작, 테스트 등을 수행하지만 나중에 퍼블릭한 상황에 대응하기 위한 무료 serverless DB 호스팅
