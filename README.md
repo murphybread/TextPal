@@ -233,3 +233,33 @@ serverless 방식임으로 첫 연결 cold start이후 5분간 활성화되고, 
 
 - (CC BY-SA 3.0
 - **SCP 재단의 일반적인 설정 (캐릭터, 요주의 단체, 세계관 등)**을 활용했다면, SCP 위키의 대문 주소(https://scpko.wikidot.com 등)를 표시해야 합니다.
+
+# SQL관련
+
+### uuid 생성 함수
+
+[`gen_random_uuid()`](https://www.postgresql.org/docs/current/functions-uuid.html): uuid v4 자동 생성함수. 13버전 이후부터 PostgreSQL에 자동 내장
+
+### node-pg-migration Not run migration Error
+
+```
+dotenv -e .env -- node-pg-migrate up
+Error: Not run migration 1745056370599_create-pets-table is preceding already run migration 0001_set-updatedAt-default
+
+```
+
+migrate 명령마다 `pgmigrations`에 기록이 저장되는데, 해당 파일을 본인이 삭제하여 불일치 한다고 나오는 경우. 해당파일을 복구하여 파일 순서를 복구하는 방법이 권장되나 아예 사용하지 않을 테이블이기에 수동으로 삭제 수행
+
+` DELETE FROM pgmigrations WHERE name = '0001_set-updatedAt-default';`
+
+### JSON, JSONB 데이터 타입의 차이
+
+JSON: 데이터를 조회할 때마다 **파싱(parsing)**하여 JSON 구조로 해석해야 합니다.
+
+- 읽기 및 검색/쿼리: 데이터를 읽거나 JSON 구조 내부의 특정 키/값을 검색, 조작할 때마다 파싱 과정이 필요하므로 JSONB보다 느립니다.
+- 쓰기: **JSONB보다 빠를 수 있습니다.** 문자열 그대로 저장하면 되기 때문에 추가적인 처리 부담이 적습니다.
+
+JSONB: 입력된 JSON 데이터를 파싱하여 이진(binary) 형태로 저장합니다. 저장 시 공백은 제거되고, 키의 순서는 정렬되며, 중복된 키가 있다면 마지막 키만 남습니다.
+
+- 읽기 및 검색/쿼리: 이미 이진 형태로 저장되어 있어 파싱 과정이 생략되므로 **JSON보다 훨씬 빠릅니다.**
+- 쓰기: 저장 시 파싱 과정이 필요하므로 JSON보다 느릴 수 있습니다.
