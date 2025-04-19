@@ -49,63 +49,63 @@ ServerSide
 - DB 테이블: `pets` (예정)
 - 고려할 Columns (속성):
 
-  - `id`
+  - [x] `id`
     - **타입:** UUID 또는 INTEGER (DB 설정에 따라 선택. 고유 식별자)
     - **설명:** 펫의 고유 ID (Primary Key)
     - **예시:** `a1b2c3d4-e5f6-7890-1234-567890abcdef`
-  - `assigned_number`
+  - [ ] `assigned_number`
     - **타입:** STRING (또는 INTEGER)
     - **설명:** RAG에 의해 부여된 SCP-like 개체 번호. 처음에는 NULL이며, Lore 축적 후 부여됨. (예: 'SCP-XXXX' 형식)
     - **예시:** `NULL` (초기), `???-?????-??`
-  - `name`
+  - [x] `name`
     - **타입:** STRING
     - **설명:** 유저가 설정한 펫의 이름
     - **예시:** `"Subject Delta"`
-  - `owner_id`
+  - [x] `owner_id`
     - **타입:** UUID 또는 INTEGER (users 테이블의 id와 동일 타입. Foreign Key)
     - **설명:** 이 펫을 소유한 유저의 ID
     - **예시:** `user_id` (users 테이블 참조)
-  - `image_url`
+  - [ ] `image_url`
     - **타입:** STRING
     - **설명:** 생성된 펫 이미지 파일의 URL 또는 경로
     - **예시:** `/images/pet/a1b2c3d4.png` 또는 `https://storage.com/.../a1b2c3d4.jpg`
-  - `description`
+  - [ ] `description`
     - **타입:** TEXT (긴 문자열 저장용)
     - **설명:** 생성형 AI가 만들어낸 펫의 외형, 특징 등에 대한 텍스트 설명, 펫 이미지 생성시 활용할 프롬프트
     - **예시:** `"이 개체는 비늘로 덮인 작은 파충류 형태이며, 주변 환경의 소리를 모방하는 특성이 있다..."`
-  - `potential_class`
+  - [x] `potential_class`
     - **타입:** STRING (또는 ENUM 타입)
     - **설명:** 펫 생성 시 가챠 시스템에 의해 부여된 초기 '변칙성 잠재력' 등급 (예: 'Minor', 'Standard', 'Significant'). 높을수록 초기 능력치나 잠재적 변칙성 발현에 유리할 수 있음.
     - **예시:** `"Standard"`
-  - `object_class`
+  - [ ] `object_class`
     - **타입:** STRING (또는 ENUM 타입)
     - **설명:** 펫의 현재 격리 난이도 또는 위험도 등급 (예: 'Safe', 'Euclid', 'Keter'). Lore 축적 및 RAG 판단에 의해 부여/변경됨. 처음에는 NULL.
     - **예시:** `NULL` (초기), `"Euclid"`
-  - `anomaly_level`
+  - [x] `anomaly_level`
     - **타입:** INTEGER 또는 FLOAT
     - **설명:** 펫의 '변이 레벨' 또는 '이상 현상 진척도'를 나타내는 내부 수치. Lore가 쌓일수록 증가하며, 번호/Object Class 부여 기준 등이 됨.
     - **예시:** `0` (초기), `55`
-  - `current_state`
+  - [x] `current_state`
     - **타입:** STRING (또는 ENUM 타입)
     - **설명:** 펫의 현재 활동 상태 (예: 'Idle', 'Exploring', 'Interacting', 'Resting', 'Contained').
     - **예시:** `"Idle"`
-  - `base_stats`
+  - [x] `base_stats`
     - **타입:** JSONB
     - **설명:** 펫의 기본 능력치 모음 (예: 힘, 지능, 속도, 적응력 등). 초기 잠재력 클래스 및 Lore에 의해 영향받음.
     - **예시:** `{ "strength": 15, "intel": 20, "adaptability": 18 }`
-  - `current_status`
+  - [x] `current_status`
     - **타입:** JSONB
     - **설명:** 펫의 현재 일시적인 상태 모음 (예: 기분, 건강 상태, 현재 적용 중인 버프/디버프 등). 상호작용 결과에 따라 자주 변동.
     - **예시:** `{ "mood": "neutral", "health": "healthy", "effects": [] }`
-  - `lore`
+  - [x] `lore`
     - **타입:** JSONB (배열 형태 추천)
     - **설명:** 펫이 겪은 사건, 달성한 업적, 특이 기록 등 '이상 현상 기록'들의 배열. 펫의 고유한 역사이자 성장의 핵심 근거. 각 기록은 텍스트 요약과 게임 로직에 필요한 구조적 데이터(효과, 타입 등)를 포함할 수 있음.
     - **예시:** `[]` (초기), `[ { "type": "achievement", "summary": "독 개체와의 전투 5연승 달성.", "timestamp": "..." }, { "type": "observation", "summary": "달빛 아래서 몸체가 희미하게 발광하는 현상 포착.", "timestamp": "..." } ]`
-  - `created_at`
+  - [ ] `created_at`
     - **타입:** TIMESTAMP
     - **설명:** 펫이 생성된 시간 기록 (자동 생성)
     - **예시:** `2023-10-27T10:00:00Z`
-  - `updated_at`
+  - [ ] `updated_at`
     - **타입:** TIMESTAMP
     - **설명:** 펫 정보가 마지막으로 업데이트된 시간 기록 (자동 업데이트)
     - **예시:** `2023-10-27T11:30:00Z`
@@ -210,6 +210,12 @@ ORM 도구의 마이그레이션 기능만 사용
 
 > 결론은 `node-pg-migrate`이 가지는 장점(안정성, PostgreSQL 특화, SQL 친화성,관리하기 편함)이 큼으로 해당 툴 사용
 
+# 프로젝트 아키텍처 변경사항
+
+## Test DB 설계
+
+새로만든 createPet 데이터 함수를 테스트하기위해 Jest로 단위테스트를 하는 것에 오버헤드가 크다고 느껴서 실제E2E를 최대한 간단하고 빠르게 구현하기 위해 동일한 schema를 가지는 테스트 DB를 만들어서 테스트하기로 결정
+
 # Neon DB
 
 무료 웹 호스팅 DB. Local에서 sql조작, 테스트 등을 수행하지만 나중에 퍼블릭한 상황에 대응하기 위한 무료 serverless DB 호스팅
@@ -263,3 +269,24 @@ JSONB: 입력된 JSON 데이터를 파싱하여 이진(binary) 형태로 저장�
 
 - 읽기 및 검색/쿼리: 이미 이진 형태로 저장되어 있어 파싱 과정이 생략되므로 **JSON보다 훨씬 빠릅니다.**
 - 쓰기: 저장 시 파싱 과정이 필요하므로 JSON보다 느릴 수 있습니다.
+
+### pg-query Promise result 객체 schema
+
+```
+interface QueryResult<RowType = any> {
+  command: string; // 실행된 SQL 명령어 (예: 'SELECT', 'INSERT', 'UPDATE', 'DELETE')
+  rowCount: number; // 영향을 받은 행의 수 (SELECT는 결과 행의 수, INSERT/UPDATE/DELETE는 변경된 행의 수)
+  oid: number | null; // INSERT 시 생성된 OID (일반적으로 사용되지 않으며 null일 경우가 많음)
+  rows: RowType[]; // 쿼리 결과 데이터의 배열 (SELECT 쿼리에서만 데이터가 담기며, INSERT/UPDATE/DELETE는 보통 빈 배열 [])
+  fields: FieldDef[]; // 결과 컬럼들의 메타데이터 (컬럼 이름, 타입 정보 등)
+  // 기타 내부 속성들 (대개 개발자가 직접 사용하지 않음)
+}
+
+interface FieldDef {
+  name: string; // 컬럼 이름
+  tableID: number; // 컬럼이 속한 테이블의 OID
+  columnID: number; // 테이블 내에서 컬럼의 위치 (0부터 시작)
+  dataTypeID: number; // PostgreSQL 데이터 타입 OID
+  // 기타 타입 관련 정보 (typeModifier, format)
+}
+```
