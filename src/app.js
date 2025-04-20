@@ -4,6 +4,7 @@ import morgan from "morgan";
 import { logger, stream } from "../config/logger.js";
 import rootRouter from "#routes/rootRoutes.js";
 import userRouter from "#routes/userRoutes.js";
+import petRouter from "#routes/petRouters.js";
 import session from "express-session";
 import sessionConfig from "#config/session.js";
 
@@ -22,6 +23,7 @@ app.use(session(sessionConfig));
 
 app.use("/", rootRouter);
 app.use("/users", userRouter);
+app.use("/pets", petRouter);
 
 const server = app.listen(SERVER_PORT, HOST);
 

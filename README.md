@@ -154,34 +154,59 @@ app-> routes -> controller-> service -> model-> DB
 
 ## 디렉토리 구조
 
+```
 TextPal/
-├── babel.config.json
-├── observeSpecificError.js
-├── package.json
-├── README.md
-├── **test**/ # 테스트 파일 디렉토리
-├── config/ # 설정 파일 디렉토리
-│ ├── database.js # DB 설정
-│ ├── session.js # 세션 설정
-│ └── logger.js # 로깅 설정
-├── logs/ # 로그 저장 디렉토리
-│ └── app.log
-├── migrations/ # DB 마이그레이션 파일
-│ └── 0001_set-updatedAt-default.sql
-├── public/ # 정적 파일 디렉토리
-└── src/ # 소스 코드 메인 디렉토리
-├── app.js # 애플리케이션 진입점
-├── api/  
- │ └── users/ # 사용자 관련 API
-├── controllers/ # 컨트롤러 레이어
-│ └── userController.js
-├── models/ # 모델 레이어
-│ └── userModel.js
-├── routes/ # 라우팅 레이어
-│ ├── rootRoutes.js
-│ └── userRoutes.js
-└── services/ # 서비스 레이어
-└── userService.js
+├── babel.config.json              # Babel 설정 파일
+├── observeSpecificError.js        # 에러 관찰용 유틸리티
+├── package.json                   # 프로젝트 의존성 및 스크립트
+├── README.md                      # 프로젝트 문서
+├── config/                        # 설정 파일 디렉토리
+│   ├── database.js               # DB 설정
+│   ├── session.js               # 세션 설정
+│   └── logger.js                # 로깅 설정
+├── logs/                         # 로그 저장 디렉토리
+│   └── app.log
+├── migrations/                   # DB 마이그레이션 파일
+│   └── 1745056370599_create-pets-table.sql
+├── public/                      # 정적 파일 디렉토리
+└── src/                        # 소스 코드 메인 디렉토리
+    ├── app.js                  # 애플리케이션 진입점
+    ├── api/                    # API 모듈
+    │   └── users/             # 사용자 관련 API
+    ├── controllers/           # 컨트롤러 레이어
+    │   ├── userController.js
+    │   └── petController.js
+    ├── models/               # 모델 레이어
+    │   ├── userModel.js
+    │   └── petModel.js
+    ├── routes/              # 라우팅 레이어
+    │   ├── rootRoutes.js
+    │   ├── userRoutes.js
+    │   └── petRoutes.js
+    └── services/           # 서비스 레이어
+        ├── userService.js
+        └── petService.js
+
+test/                     # 테스트 관련 디렉토리
+├── __test__/            # 테스트 파일
+└── script/              # 테스트 스크립트
+    └── run-model-test.js
+```
+
+## API 엔드포인트
+
+### Users
+
+- GET /users - 사용자 목록 조회
+- POST /users - 신규 사용자 생성
+
+### Pets
+
+- GET /pets - 펫 목록 조회
+- POST /pets - 신규 펫 생성
+- GET /pets/:id - 특정 펫 상세 정보 조회
+- PUT /pets/:id - 펫 정보 업데이트
+- DELETE /pets/:id - 펫 삭제
 
 # DDL 작업은 migration에서 수행
 
