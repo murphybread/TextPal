@@ -53,8 +53,8 @@ ServerSide
     - **타입:** UUID 또는 INTEGER (DB 설정에 따라 선택. 고유 식별자)
     - **설명:** 펫의 고유 ID (Primary Key)
     - **예시:** `a1b2c3d4-e5f6-7890-1234-567890abcdef`
-  - [ ] `assigned_number`
-    - **타입:** STRING (또는 INTEGER)
+  - [x] `assigned_number`
+    - **타입:** VARCHAR
     - **설명:** RAG에 의해 부여된 SCP-like 개체 번호. 처음에는 NULL이며, Lore 축적 후 부여됨. (예: 'SCP-XXXX' 형식)
     - **예시:** `NULL` (초기), `???-?????-??`
   - [x] `name`
@@ -65,11 +65,11 @@ ServerSide
     - **타입:** UUID 또는 INTEGER (users 테이블의 id와 동일 타입. Foreign Key)
     - **설명:** 이 펫을 소유한 유저의 ID
     - **예시:** `user_id` (users 테이블 참조)
-  - [ ] `image_url`
+  - [x] `image_url`
     - **타입:** STRING
     - **설명:** 생성된 펫 이미지 파일의 URL 또는 경로
     - **예시:** `/images/pet/a1b2c3d4.png` 또는 `https://storage.com/.../a1b2c3d4.jpg`
-  - [ ] `description`
+  - [x] `description`
     - **타입:** TEXT (긴 문자열 저장용)
     - **설명:** 생성형 AI가 만들어낸 펫의 외형, 특징 등에 대한 텍스트 설명, 펫 이미지 생성시 활용할 프롬프트
     - **예시:** `"이 개체는 비늘로 덮인 작은 파충류 형태이며, 주변 환경의 소리를 모방하는 특성이 있다..."`
@@ -77,7 +77,7 @@ ServerSide
     - **타입:** STRING (또는 ENUM 타입)
     - **설명:** 펫 생성 시 가챠 시스템에 의해 부여된 초기 '변칙성 잠재력' 등급 (예: 'Minor', 'Standard', 'Significant'). 높을수록 초기 능력치나 잠재적 변칙성 발현에 유리할 수 있음.
     - **예시:** `"Standard"`
-  - [ ] `object_class`
+  - [x] `object_class`
     - **타입:** STRING (또는 ENUM 타입)
     - **설명:** 펫의 현재 격리 난이도 또는 위험도 등급 (예: 'Safe', 'Euclid', 'Keter'). Lore 축적 및 RAG 판단에 의해 부여/변경됨. 처음에는 NULL.
     - **예시:** `NULL` (초기), `"Euclid"`
@@ -101,11 +101,11 @@ ServerSide
     - **타입:** JSONB (배열 형태 추천)
     - **설명:** 펫이 겪은 사건, 달성한 업적, 특이 기록 등 '이상 현상 기록'들의 배열. 펫의 고유한 역사이자 성장의 핵심 근거. 각 기록은 텍스트 요약과 게임 로직에 필요한 구조적 데이터(효과, 타입 등)를 포함할 수 있음.
     - **예시:** `[]` (초기), `[ { "type": "achievement", "summary": "독 개체와의 전투 5연승 달성.", "timestamp": "..." }, { "type": "observation", "summary": "달빛 아래서 몸체가 희미하게 발광하는 현상 포착.", "timestamp": "..." } ]`
-  - [ ] `created_at`
+  - [x] `created_at`
     - **타입:** TIMESTAMP
     - **설명:** 펫이 생성된 시간 기록 (자동 생성)
     - **예시:** `2023-10-27T10:00:00Z`
-  - [ ] `updated_at`
+  - [x] `updated_at`
     - **타입:** TIMESTAMP
     - **설명:** 펫 정보가 마지막으로 업데이트된 시간 기록 (자동 업데이트)
     - **예시:** `2023-10-27T11:30:00Z`
@@ -165,7 +165,7 @@ TextPal/
 │   ├── session.js               # 세션 설정
 │   └── logger.js                # 로깅 설정
 ├── logs/                         # 로그 저장 디렉토리
-│   └── app.log
+│   └── app.log                  # 애플리케이션 로그 파일
 ├── migrations/                   # DB 마이그레이션 파일
 │   └── 1745056370599_create-pets-table.sql
 ├── public/                      # 정적 파일 디렉토리
@@ -174,18 +174,20 @@ TextPal/
     ├── api/                    # API 모듈
     │   └── users/             # 사용자 관련 API
     ├── controllers/           # 컨트롤러 레이어
-    │   ├── userController.js
-    │   └── petController.js
+    │   ├── userController.js  # 사용자 관련 컨트롤러
+    │   └── petController.js   # 펫 관련 컨트롤러
     ├── models/               # 모델 레이어
-    │   ├── userModel.js
-    │   └── petModel.js
+    │   ├── userModel.js      # 사용자 데이터 모델
+    │   └── petModel.js       # 펫 데이터 모델
     ├── routes/              # 라우팅 레이어
-    │   ├── rootRoutes.js
-    │   ├── userRoutes.js
-    │   └── petRoutes.js
-    └── services/           # 서비스 레이어
-        ├── userService.js
-        └── petService.js
+    │   ├── rootRoutes.js    # 메인 라우터
+    │   ├── userRoutes.js    # 사용자 관련 라우트
+    │   └── petRoutes.js     # 펫 관련 라우트
+    ├── services/           # 서비스 레이어
+    │   ├── userService.js  # 사용자 관련 비즈니스 로직
+    │   └── petService.js   # 펫 관련 비즈니스 로직
+    └── utils/             # 유틸리티 함수
+        └── loggerUtils.js # 로깅 관련 유틸리티
 
 test/                     # 테스트 관련 디렉토리
 ├── __test__/            # 테스트 파일
@@ -193,20 +195,36 @@ test/                     # 테스트 관련 디렉토리
     └── run-model-test.js
 ```
 
-## API 엔드포인트
+## 유틸리티 기능
 
-### Users
+### 로깅 유틸리티 (loggerUtils.js)
 
-- GET /users - 사용자 목록 조회
-- POST /users - 신규 사용자 생성
+- [x] `logAndExecute` - 비즈니스 로직 래핑 함수
 
-### Pets
+  - 비동기 비즈니스 로직 함수를 실행하고 시작/완료/실패 로깅을 자동화
+  - 서비스, 컨트롤러 등에서 재사용 가능한 로깅 패턴 제공
+  - 에러 발생 시 자동 로깅 및 에러 전파
 
-- GET /pets - 펫 목록 조회
-- POST /pets - 신규 펫 생성
-- GET /pets/:id - 특정 펫 상세 정보 조회
-- PUT /pets/:id - 펫 정보 업데이트
-- DELETE /pets/:id - 펫 삭제
+- [x] `wrapControllerHandler` - 컨트롤러 핸들러 래핑 함수
+  - Express 컨트롤러 핸들러에 대한 자동 로깅 기능
+  - try-catch 패턴과 에러 핸들링 자동화
+  - 요청 method와 path 정보 포함한 상세 로깅
+
+## 아키텍처 패턴
+
+- **레이어드 아키텍처** 채택
+
+  - Controller → Service → Model 패턴으로 관심사 분리
+  - 각 레이어는 단일 책임을 가지며 명확한 의존성 방향 유지
+
+- **유틸리티 레이어**
+
+  - 공통 기능을 재사용 가능한 유틸리티로 분리
+  - 로깅, 에러 핸들링 등 크로스커팅 관심사를 중앙화
+
+- **설정 분리**
+  - 데이터베이스, 로깅, 세션 등 설정을 별도 파일로 분리
+  - 환경별 설정 관리 용이
 
 # DDL 작업은 migration에서 수행
 
@@ -234,6 +252,10 @@ ORM 도구의 마이그레이션 기능만 사용
 - Prisma의 경우 스키마 관리 및 제너레이터를 통한 타입 생성 등에 유용하다는 의견이 있습니다.
 
 > 결론은 `node-pg-migrate`이 가지는 장점(안정성, PostgreSQL 특화, SQL 친화성,관리하기 편함)이 큼으로 해당 툴 사용
+
+## ORM을 사용해도되는가?의 고민
+
+https://www.reddit.com/r/node/comments/1cgr49k/when_does_it_make_sense_to_use_an_orm/
 
 # 프로젝트 아키텍처 변경사항
 
