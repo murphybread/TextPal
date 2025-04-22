@@ -16,6 +16,26 @@ export async function createPet(data) {
   );
 }
 
-// findPetById;
-// findPetsByOwnerId;
-// deletePetById;
+export async function findPetById(id) {
+  return logAndExecute(
+    "findPetById",
+    async (id) => {
+      return await petModel.findPetById(id);
+    },
+    id
+  );
+}
+
+
+export async function findPetsByOwnerId(ownerId){
+  return logAndExecute("findPetsByOwnerId", async (ownerId) => {
+    return await petModel.findPetsByOwnerId(ownerId);
+  }, ownerId);
+}
+
+export async function deletePetById(id){
+  return logAndExecute("deletePetById", async (id) => {
+    return await petModel.deletePetById(id);
+  }, id);
+}
+

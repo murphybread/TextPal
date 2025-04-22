@@ -22,6 +22,7 @@ ServerSide
 - [x] server 동작시 error 이벤트처리 (listen이 되지 않는 error상황에서의 정보 제공)
 - [x] logger 설정 (morgan 및 winston으로 영구적인 서버이벤트 및 http request 정보 저징)
 - [x] DB 연결 (pg를 통해 로컬 DB와연결 .env활용)
+
 - [x] **GET /users – 사용자 목록 조회 API** 개발
 
   - [x] routes 설정 (`router.get('/', userController.listUsers)`)
@@ -73,6 +74,11 @@ ServerSide
 - [x] DB 생성 완료
 
 ## Pet 관련 기능 목록 정의
+- [x] **GET /pets - 펫 목록 조회 API** 개발
+- [x] **POST /pets - 신규 펫 생성 API** 개발
+- [x] **GET /pets/:id - 펫 상세 조회 API** 개발
+- [x] **GET /pets/owner/:ownerId - 소유자 펫 목록 조회 API** 개발
+- [x] **DELETE /pets/:id - 펫 삭제 API** 개발
 
 - User 테이블과의 관계: 1:N (1명의 유저가 여러 마리의 펫을 소유가능)
 - DB 테이블: `pets` (예정)
@@ -138,6 +144,7 @@ ServerSide
     - **타입:** TIMESTAMP
     - **설명:** 펫 정보가 마지막으로 업데이트된 시간 기록 (자동 업데이트)
     - **예시:** `2023-10-27T11:30:00Z`
+
 
 - [ ] 펫 상호작용 API
 
@@ -365,4 +372,23 @@ interface FieldDef {
   dataTypeID: number; // PostgreSQL 데이터 타입 OID
   // 기타 타입 관련 정보 (typeModifier, format)
 }
+```
+
+
+# API
+
+## API 경로 설계를 잘못한 경우(경로 설정)
+`Express.js`에서는 위에서부터 아래로 읽기 때문에 해당되는 경우 수행하고 종료됨으로 :ownerId 경로의 함수는 항상 실행이 안됨.
+
+```
+router.get("/:id", async (req, res, next) => {
+  logger.info(`GET /pets/:id  called`);
+  petController.findPetById(req, res, next);
+});
+
+router.get("/:ownerId", async (req, res, next) => {
+  logger.info(`GET /pets/:ownerId  called`);
+  petController.findPetsByOwnerId(req, res, next);
+});
+
 ```
