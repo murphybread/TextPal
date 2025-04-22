@@ -43,9 +43,38 @@ ServerSide
   - 세션 지원 미들웨어인 `express-session`으로 구현
   - 클라이언트 쿠키는 session ID만 저장, 서버에서는 ID와 매핑되는 session의 프로퍼티들 저장
 
+## User 테이블 관련 기능 목록 정의
+- DB 테이블: `users`
+- 고려할 Columns (속성):
+  - [x] `id`
+    - **타입:** UUID 또는 INTEGER (DB 설정에 따라 선택. 고유 식별자)
+    - **설명:** 사용자의 고유 ID (Primary Key)
+    - **예시:** `a1b2c3d4-e5f6-7890-1234-567890abcdef`
+  - [x] `username`
+    - **타입:** VARCHAR
+    - **설명:** 사용자 이름
+    - **예시:** `"user123"`
+  - [x] `email`
+    - **타입:** VARCHAR
+    - **설명:** 사용자 이메일
+    - **예시:** `"user@example.com"`
+  - [x] `password`
+    - **타입:** VARCHAR
+    - **설명:** 사용자 비밀번호 (암호화된 상태)
+    - **예시:** `"encrypted_password"`
+  - [x] `created_at`
+    - **타입:** TIMESTAMP
+    - **설명:** 사용자 생성 시간
+    - **예시:** `2023-10-27T10:00:00Z`
+  - [x] `updated_at`
+    - **타입:** TIMESTAMP
+    - **설명:** 사용자 정보가 마지막으로 업데이트된 시간
+    - **예시:** `2023-10-27T11:30:00Z`
+- [x] DB 생성 완료
+
 ## Pet 관련 기능 목록 정의
 
-- 관계: 1:N (1명의 유저가 여러 마리의 펫을 소유가능)
+- User 테이블과의 관계: 1:N (1명의 유저가 여러 마리의 펫을 소유가능)
 - DB 테이블: `pets` (예정)
 - 고려할 Columns (속성):
 
