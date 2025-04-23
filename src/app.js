@@ -8,6 +8,9 @@ import petRouter from "#routes/petRouters.js";
 import session from "express-session";
 import sessionConfig from "#config/session.js";
 
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "#config/apiSpecification.js";
+
 const SERVER_PORT = parseInt(process.env.SERVER_PORT) || 3000;
 const HOST = process.env.HOST || "localhost";
 
@@ -20,6 +23,8 @@ const morganFormat = process.env.NODE_ENV === "development" ? "combined" : "comb
 app.use(morgan(morganFormat, { stream: stream }));
 app.use(express.json());
 app.use(session(sessionConfig));
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.use("/", rootRouter);
 app.use("/users", userRouter);
