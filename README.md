@@ -46,6 +46,9 @@ ServerSide
   - 세션 지원 미들웨어인 `express-session`으로 구현
   - 클라이언트 쿠키는 session ID만 저장, 서버에서는 ID와 매핑되는 session의 프로퍼티들 저장
 
+app-> routes -> controller-> service -> model-> DB
+단계를 여러번 나누는 이유: 좀 더 복잡한 기능을 만들기위해 필요한 관심사 분리를 기반으로 아키텍처를 설계하고싶기에
+
 ## User 테이블 관련 기능 목록 정의
 
 - DB 테이블: `users`
@@ -226,8 +229,18 @@ Qdrant 사용(사용경험, 실시간 어플리케이션 성능 고려)
   - (우선순위 낮음) 사용자를 식별하고 세션을 유지하기 위한 인증 수단.
   - 일반 회원 로그인 대신 더 나은 UX 경험을 위해 Google,X (Twitter)로그인 제공하기. 사용자 고려해서 요청이 많은 경우 추가 소셜로그인 방식 도입
 
-app-> routes -> controller-> service -> model-> DB
-단계를 여러번 나누는 이유: 좀 더 복잡한 기능을 만들기위해 필요한 관심사 분리를 기반으로 아키텍처를 설계하고싶기에
+## 어떤 임베딩 모델을 사용해야할까?
+
+가격, 정확성, 추론속도, 확장성(multilingual)을 고려해서 선택하여야하는 부분입니다.
+특히 콜렉션에서 벡터의 크기는 고정되기에 임베딩 모델마다 벡터차원의 크기가 다르기에 계획적으로 고민해야하는 부분입니다.
+EMbedding model [리더보드](https://huggingface.co/spaces/mteb/leaderboard)(2025년4월기준)에서 확인하였습니다. 고민 포인트에서 만약 API로 가능하다면 사용하는 것이 운영관리에서 좋다고 생각했습니다. 일반적으로 좋은 성능의 Embedding모델을 동작시키기위해서 높은 GPU자원을 소모하고, 매번 추론할떄마다 소모되고 하다보니 이런 인프라적인 부담은 외부의 기능을 사용하는것이 결론적으로는 비용을(시간+금전)아끼는 방법이라 생각했습니다.
+
+google의 `gemini-embedding-exp-03-07` 모델이 SOTA모델급에 가격이 전 모델 [text-004](https://ai.google.dev/gemini-api/docs/pricing#text-embedding-004)기준으로 무료로 제공되며, 프로덕션 환경에서 사용되는 [textembedding-gecko@001]의 경우(https://cloud.google.com/vertex-ai/generative-ai/pricing)
+
+- input 0.025$/1M
+- output No charge
+  충분히 합리적이기에 해당 모델을 사용하기로했습니다.
+  기본 3K임베딩에 config 설정을통해 1536, 768차원을 지원하는 점도 장점이었습니다.
 
 #### Prisma대신 pg 사용하는 이유
 

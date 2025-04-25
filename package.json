@@ -13,7 +13,10 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@google/genai": "^0.10.0",
     "@prisma/client": "^6.6.0",
+    "@qdrant/js-client-rest": "^1.14.0",
+    "@qdrant/qdrant-js": "^1.14.0",
     "axios": "^1.8.4",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
