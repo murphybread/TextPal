@@ -164,6 +164,50 @@ ServerSide
 
 ## RAG, 세계 상호작용
 
+Qdrant 사용(사용경험, 실시간 어플리케이션 성능 고려)
+콜렉션 설정
+
+### 1. world_rules 컬렉션
+
+- **목적:** SCP 세계관의 근본적인 규칙, 프로토콜, 이론, 개념 등 추상적이고 일반적인 지식을 저장합니다. 펫의 상호작용 결과나 LLM의 응답을 생성할 때 참조할 핵심적인 세계관 법칙을 제공합니다.
+- **벡터:**
+  - rule_embedding: 세계 규칙 텍스트 임베딩 벡터.
+    - **크기:** <VECTOR_SIZE> (src/qdrant/collectionSetup.js 파일에서 설정된 임베딩 모델의 벡터 차원)
+    - **거리:** <DISTANCE_METRIC> (src/qdrant/collectionSetup.js 파일에서 설정된 임베딩 모델의 권장 유사도 측정 방식)
+- **페이로드 인덱스:**
+  - category (keyword): 규칙 분류 (예: "Physics Rule", "Containment Protocol"). 필터링 성능 향상.
+  - tags (keyword): 관련 키워드. 필터링 성능 향상.
+  - related_entities (keyword): 이 규칙과 관련된 특정 엔티티 ID 배열 (named_entities 컬렉션 참조). 관련 엔티티 기반 필터링/검색 성능 향상.
+  - text_content (text): (선택 사항) 원문 텍스트 검색용 인덱스. 텍스트 필드 검색 성능 향상.
+
+### 2. named_entities 컬렉션
+
+- **목적:** SCP 세계관 내 특정 존재(SCP 개체, 인물), 아이템, 장소 등의 구체적인 정보를 저장합니다. world_rules 컬렉션에서 참조될 수 있는 구체적인 엔티티 정보를 제공합니다.
+- **벡터:**
+  - entity_embedding: 엔티티 설명 텍스트 임베딩 벡터.
+    - **크기:** <VECTOR_SIZE> (src/qdrant/collectionSetup.js 파일에서 설정된 임베딩 모델의 벡터 차원)
+    - **거리:** <DISTANCE_METRIC> (src/qdrant/collectionSetup.js 파일에서 설정된 임베딩 모델의 권장 유사도 측정 방식)
+- **페이로드 인덱스:**
+  - name (text): 엔티티 이름 (예: "SCP-173", "Dr. Bright"). 이름 기반 검색 성능 향상.
+  - assigned_number (keyword): (주로 SCP 개체) 할당된 번호 (예: "SCP-173"). 정확한 번호 매칭 필터링 성능 향상.
+  - object_class (keyword): (주로 SCP 개체) 격리 등급 (예: "Safe", "Euclid", "Keter"). 등급별 필터링 성능 향상.
+  - category (keyword): 엔티티 종류 (예: "Anomaly", "Person", "Location", "Item"). 종류별 필터링 성능 향상.
+  - tags (keyword): 관련 키워드. 필터링 성능 향상.
+  - description_summary (text): (선택 사항) 설명 요약 텍스트 검색용 인덱스. 텍스트 필드 검색 성능 향상.
+
+### 3. pet_lore 컬렉션 (선택 사항)
+
+- **목적:** 각 사용자 펫의 고유한 이상 현상 기록을 저장합니다. 펫의 경험 기반 Lore 축적 및 RAG에 활용됩니다.
+- **벡터:**
+  - lore_embedding: Lore 텍스트 임베딩 벡터.
+    - **크기:** <VECTOR_SIZE> (src/qdrant/collectionSetup.js 파일에서 설정된 임베딩 모델의 벡터 차원)
+    - **거리:** <DISTANCE_METRIC> (src/qdrant/collectionSetup.js 파일에서 설정된 임베딩 모델의 권장 유사도 측정 방식)
+- **페이로드 인덱스:**
+  - pet_id (keyword): 이 Lore가 속한 펫의 ID. 펫별 Lore 필터링/검색에 필수적이며 성능 향상.
+  - type (keyword): Lore의 종류 (예: "achievement", "observation", "interaction_result"). 종류별 필터링 성능 향상.
+  - timestamp (integer): Lore 발생 시간. 시간 기반 검색/정렬 성능 향상.
+  - involved_entities (keyword): (선택 사항) 이 Lore에 연관된 엔티티 ID 배열. 연관 엔티티 기반 필터링/검색 성능 향상.
+  - summary (text): (선택 사항) Lore 요약 텍스트 검색용 인덱스. 텍스트 필드 검색 성능 향상.
 - [ ] RAG Knowledge Base 설계 및 구축
 
   - 서비스 세계관의 법칙, 물리/개념적 규칙, 특정 지역/아이템/존재의 특성, 카르마 시스템 규칙, 변칙성 상호작용 결과 로직, Lore 축적 조건 및 효과 등을 정의.
@@ -191,47 +235,51 @@ app-> routes -> controller-> service -> model-> DB
 -> Prisma검색결과 2배에서 많게는 5배까지 퍼포먼스차이가나며, ORM만 쓰기에 쿼리튜닝이나 오버헤드 등으로DB 학습에는 부적합하다고판단
 -> pg로 사용하기로 결정
 
-## 디렉토리 구조
+# 디렉토리 구조
 
 ```
-TextPal/
-├── babel.config.json              # Babel 설정 파일
-├── observeSpecificError.js        # 에러 관찰용 유틸리티
-├── package.json                   # 프로젝트 의존성 및 스크립트
-├── README.md                      # 프로젝트 문서
-├── config/                        # 설정 파일 디렉토리
-│   ├── database.js               # DB 설정
-│   ├── session.js               # 세션 설정
-│   └── logger.js                # 로깅 설정
-├── logs/                         # 로그 저장 디렉토리
-│   └── app.log                  # 애플리케이션 로그 파일
-├── migrations/                   # DB 마이그레이션 파일
-│   └── 1745056370599_create-pets-table.sql
-├── public/                      # 정적 파일 디렉토리
-└── src/                        # 소스 코드 메인 디렉토리
-    ├── app.js                  # 애플리케이션 진입점
-    ├── api/                    # API 모듈
-    │   └── users/             # 사용자 관련 API
-    ├── controllers/           # 컨트롤러 레이어
-    │   ├── userController.js  # 사용자 관련 컨트롤러
-    │   └── petController.js   # 펫 관련 컨트롤러
-    ├── models/               # 모델 레이어
-    │   ├── userModel.js      # 사용자 데이터 모델
-    │   └── petModel.js       # 펫 데이터 모델
-    ├── routes/              # 라우팅 레이어
-    │   ├── rootRoutes.js    # 메인 라우터
-    │   ├── userRoutes.js    # 사용자 관련 라우트
-    │   └── petRoutes.js     # 펫 관련 라우트
-    ├── services/           # 서비스 레이어
-    │   ├── userService.js  # 사용자 관련 비즈니스 로직
-    │   └── petService.js   # 펫 관련 비즈니스 로직
-    └── utils/             # 유틸리티 함수
-        └── loggerUtils.js # 로깅 관련 유틸리티
-
-test/                     # 테스트 관련 디렉토리
-├── __test__/            # 테스트 파일
-└── script/              # 테스트 스크립트
-    └── run-model-test.js
+.
+|-- README.md
+|-- babel.config.json
+|-- config
+|   |-- apiSpecification.js
+|   |-- database.js
+|   |-- logger.js
+|   |-- qdrantClient.js
+|   `-- session.js
+|-- logs
+|   `-- app.log
+|-- migrations
+|   |-- 1745056370599_create-pets-table.sql
+|   |-- 1745246313455_add-addtional-columns.sql
+|   `-- 1745327148556_create-user-table.sql
+|-- observeSpecificError.js
+|-- package-lock.json
+|-- package.json
+|-- public
+|-- src
+|   |-- api
+|   |   `-- users
+|   |-- app.js
+|   |-- controllers
+|   |   |-- petController.js
+|   |   `-- userController.js
+|   |-- models
+|   |   |-- petModel.js
+|   |   `-- userModel.js
+|   |-- routes
+|   |   |-- petRouters.js
+|   |   |-- rootRoutes.js
+|   |   `-- userRoutes.js
+|   |-- services
+|   |   |-- petService.js
+|   |   `-- userService.js
+|   `-- utils
+|       `-- loggerUtils.js
+`-- test
+    |-- __test__
+    `-- script
+        `-- run-model-test.js
 ```
 
 ## 유틸리티 기능
@@ -415,3 +463,4 @@ FastAPI의 경우 자동으로 API 명세서가 만들어지는 점을 참고하
 마지막으로 남은것이 자동이 아닌 수동으로 `swagger-jsdoc` 로 OpenAPI에 맞춰 작성한 후 자동으로 `api-docs`경로로 생성해주는 `swagger-ui-express`를 조합하는 방법을 사용하였습니다. 명세서 관리를 위해 일일히 수동으로 전부 적어줘야하는 방법이기에 최대한 피할려고했지만, 현재로서 가능한 방법은 이 방법이 그나마 가장 쉬운 방법이라 생각했습니다.(이 기능을 위해 따로 기능을 만드는 것은 우선순위가 낮으니...)
 
 결론적으로 최소한의 값을 이용해 AI를 통해 문법을 익혀가며 구현을 완료하였습니다.
+`apiSpecification.js`파일을 작성한후 routes밑의 파일에 전부 작성하는 방법으로 docs를 구현했습니다.
