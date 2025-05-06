@@ -17,3 +17,6 @@ benchmarks/graphs
 
 prisma/
 .env
+
+
+/test/tei-cache/

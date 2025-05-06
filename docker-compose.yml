@@ -1,0 +1,16 @@
+services:
+  tei_server:
+    image: ghcr.io/huggingface/text-embeddings-inference:latest
+    command: --model-id ${TEI_MODEL_ID:-intfloat/multilingual-e5-large-instruct} # 환경 변수가 없으면 기본값 사용
+    ports:
+      - "8080:80"
+    volumes:
+      - ${LOCAL_TEI_CACHE_PATH}:/data
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    restart: unless-stopped
