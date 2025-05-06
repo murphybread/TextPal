@@ -254,6 +254,13 @@ google의 `gemini-embedding-exp-03-07` 모델이 SOTA모델급에 가격이 전 
 https://ai.google.dev/gemini-api/docs/rate-limits#current-rate-limits
 
 이런 한계점을 발견했기에 임베딩 모델 수정하기로 결정
+모델 수정
+https://huggingface.co/intfloat/multilingual-e5-large-instruct
+종합적인 instruct 제공시 성능이 올라가는 560M규모의 작다고 판단되는 오픈 소스 모델
+
+## TEI Docker 방식으로 임베딩 모델 서빙하기
+
+오픈 소스 모델을 로컬 서버에서 동작을 하고싶은 상황. 유료 API를 사용하지 않고 로컬에서 안전하고 빠르게 요청하는 것이 목적. 하지만 이 경우 서버를 따로 만들어서 유지가 필요한데, 관리를 위한 비용을 최소화하고 싶은 상황
 
 ---
 
