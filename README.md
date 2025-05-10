@@ -24,16 +24,11 @@ ServerSide
 - [x] server 동작시 error 이벤트처리 (listen이 되지 않는 error상황에서의 정보 제공)
 - [x] logger 설정 (morgan 및 winston으로 영구적인 서버이벤트 및 http request 정보 저징)
 - [x] DB 연결 (pg를 통해 로컬 DB와연결 .env활용)
-
-- [x] **GET /users – 사용자 목록 조회 API** 개발
-
+- [x] 초기 기능 구축
   - [x] routes 설정 (`router.get('/', userController.listUsers)`)
   - [x] controller 구현 (`listUsers`)
   - [x] service 구현 (`getAllUsers`)
   - [x] model 구현 (`findAllUsers`)
-
-- [x] **POST /users – 신규 사용자 생성 API** 개발
-
   - [x] routes 설정 (`router.post('/', userController.createUser)`)
   - [x] controller 구현 (`createUser`)
   - [x] service 구현 (`createUser`)
