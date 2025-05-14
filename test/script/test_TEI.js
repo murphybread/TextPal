@@ -1,23 +1,22 @@
-// test_tei_embeddings.js
-
-// Node.js 18 이상에서는 fetch가 기본적으로 사용 가능합니다.
-// 이전 버전의 Node.js를 사용 중이라면, `node-fetch` 같은 라이브러리를 설치해야 할 수 있습니다.
-// npm install node-fetch
-// const fetch = require('node-fetch'); // node-fetch 사용 시
-
-async function getEmbeddingsFromTEI(texts) {
+async function getEmbeddingsFromTEI(texts, areQueries = []) {
+  // areQueries 기본값을 빈 배열로 설정
   const teiServerUrl = "http://localhost:8080/embed";
 
-  // intfloat/multilingual-e5-large-instruct 모델은 특정 작업(예: 검색)에서
-  // "query: " 또는 "passage: " 같은 접두사를 텍스트 앞에 붙이면 더 좋은 성능을 낼 수 있습니다.
-  // 일반적인 테스트에서는 접두사 없이 보내도 작동합니다.
-  // 필요하다면 입력 텍스트를 다음과 같이 수정할 수 있습니다:
-  // const prefixedTexts = texts.map(text => `query: ${text}`);
+  // 실제 사용 사례에 맞는 작업 설명 정의
+  const taskDescriptionForQueries = "Retrieve relevant passages from the knowledge base for the given query.";
+
+  const processedTexts = texts.map((text, index) => {
+    // areQueries 배열이 제공되었고, 현재 인덱스의 값이 true이면 Query로 처리
+    if (areQueries.length === texts.length && areQueries[index]) {
+      return `Instruct: ${taskDescriptionForQueries}\nQuery: ${text}`;
+    }
+    return text; // 그 외에는 Document로 처리 (프리픽스 없음)
+  });
 
   const payload = {
-    inputs: texts,
-    normalize: false, // 정규화된 임베딩을 원하면 true로 설정
-    truncate: false, // 모델의 최대 길이에 맞춰 입력을 자르려면 true로 설정
+    inputs: processedTexts,
+    normalize: true, // 임베딩 정규화
+    truncate: true, // 최대 길이에 맞춰 자르기
   };
 
   console.log("Request Payload:", JSON.stringify(payload, null, 2));
@@ -32,11 +31,10 @@ async function getEmbeddingsFromTEI(texts) {
     });
 
     if (!response.ok) {
-      const errorBody = await response.text(); // 오류 내용을 확인하기 위해 text로 받음
+      const errorBody = await response.text();
       throw new Error(`HTTP error! status: ${response.status}, message: ${response.statusText}, body: ${errorBody}`);
     }
 
-    // TEI의 /embed 엔드포인트는 직접 임베딩 배열들의 배열을 반환합니다.
     const embeddings = await response.json();
     return embeddings;
   } catch (error) {
@@ -44,17 +42,16 @@ async function getEmbeddingsFromTEI(texts) {
     return null;
   }
 }
-
 // 테스트 실행
 async function runTest() {
-  const sampleTexts = [
-    "This is a test sentence for TextPal.",
-    "你好，世界！", // 중국어
-    "intfloat/multilingual-e5-large-instruct 모델 테스트 중입니다.", // 한국어
-  ];
+  const sampleQueries = ["intfloat/multilingual-e5-large-instruct 모델 테스트 중입니다."];
+  const sampleDocuments = ["This is a test sentence for TextPal.", "你好，世界！"];
 
-  console.log(`Requesting embeddings for ${sampleTexts.length} texts...`);
-  const embeddingsArray = await getEmbeddingsFromTEI(sampleTexts);
+  const allTexts = [...sampleQueries, ...sampleDocuments];
+  const areTheseQueries = [...Array(sampleQueries.length).fill(true), ...Array(sampleDocuments.length).fill(false)];
+
+  console.log(`Requesting embeddings for ${allTexts.length} texts...`);
+  const embeddingsArray = await getEmbeddingsFromTEI(allTexts, areTheseQueries);
 
   if (embeddingsArray && Array.isArray(embeddingsArray)) {
     console.log(`\nSuccessfully received ${embeddingsArray.length} embeddings.`);
