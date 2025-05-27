@@ -25,6 +25,7 @@ ServerSide
 - [x] logger 설정 (morgan 및 winston으로 영구적인 서버이벤트 및 http request 정보 저징)
 - [x] DB 연결 (pg를 통해 로컬 DB와연결 .env활용)
 - [x] 초기 기능 구축
+
   - [x] routes 설정 (`router.get('/', userController.listUsers)`)
   - [x] controller 구현 (`listUsers`)
   - [x] service 구현 (`getAllUsers`)
@@ -258,6 +259,7 @@ https://huggingface.co/intfloat/multilingual-e5-large-instruct
 |   |-- logger.js
 |   |-- qdrantClient.js
 |   `-- session.js
+|-- docker-compose.yml
 |-- logs
 |   `-- app.log
 |-- migrations
@@ -278,6 +280,8 @@ https://huggingface.co/intfloat/multilingual-e5-large-instruct
 |   |-- models
 |   |   |-- petModel.js
 |   |   `-- userModel.js
+|   |-- qdrant
+|   |   `-- collectionSetup.js
 |   |-- routes
 |   |   |-- petRouters.js
 |   |   |-- rootRoutes.js
@@ -290,7 +294,9 @@ https://huggingface.co/intfloat/multilingual-e5-large-instruct
 `-- test
     |-- __test__
     `-- script
-        `-- run-model-test.js
+        |-- geminiapi.js
+        |-- run-model-test.js
+        `-- test_TEI.js
 ```
 
 ## 유틸리티 기능
