@@ -7,13 +7,22 @@ export async function findAllUsers() {
   return rows;
 }
 
-export async function createUser({ name, email }) {
-  logger.debug(`SQL: INSERT INTO users… [${name} ${email}]`);
+export async function createUser({ username, email, password }) {
+  // 1. 로그 메시지 수정
+  logger.debug(`SQL: INSERT INTO users… [${username} ${email}]`);
+
   const { rows } = await pool.query(
-    `INSERT INTO "users" (name, email)
-     VALUES ($1, $2)
+    // 2. SQL 쿼리에서 "name"을 "username"으로 바꾸고, password 컬럼 추가
+    `INSERT INTO "users" (username, email, password)
+     VALUES ($1, $2, $3)
      RETURNING *`,
-    [name, email]
+    // 3. SQL 파라미터 배열에도 password 추가
+    [username, email, password]
   );
-  return rows[0];
+
+  const newUser = rows[0];
+  // 4. (보안 강화) 반환하기 전에 결과 객체에서 비밀번호 필드 삭제
+  delete newUser.password;
+
+  return newUser;
 }
