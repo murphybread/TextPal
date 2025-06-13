@@ -250,7 +250,7 @@ https://huggingface.co/intfloat/multilingual-e5-large-instruct
 # 디렉토리 구조
 
 ```
-.
+.  
 |-- README.md
 |-- babel.config.json
 |-- config
@@ -272,7 +272,7 @@ https://huggingface.co/intfloat/multilingual-e5-large-instruct
 |-- public
 |-- src
 |   |-- api
-|   |   `-- users
+|   |   `-- users/           # (현재 비어있음 또는 향후 확장용)
 |   |-- app.js
 |   |-- controllers
 |   |   |-- petController.js
@@ -291,15 +291,25 @@ https://huggingface.co/intfloat/multilingual-e5-large-instruct
 |   |   `-- userService.js
 |   `-- utils
 |       `-- loggerUtils.js
-`-- test
-    |-- __test__
-    `-- script
-        |-- geminiapi.js
-        |-- run-model-test.js
-        `-- test_TEI.js
+|-- test
+|   |-- __test__/
+|   |-- script/
+|   |   |-- geminiapi.js
+|   |   |-- run-model-test.js
+|   |   `-- test_TEI.js
+|   `-- tei-cache/
+|       `-- models--intfloat--multilingual-e5-large-instruct/
+|           |-- blobs/
+|           |-- refs/
+|           `-- snapshots/
 ```
 
-## 유틸리티 기능
+- 실제 구조에는 테스트, 캐시, 실험용 파일 등이 추가되어 있습니다.
+- src/api/users 등 일부 폴더는 현재 비어있거나 향후 확장용입니다.
+- public/ 폴더 하위 내용은 생략되어 있습니다.
+- observeSpecificError.js 등 실험/유틸 파일이 포함되어 있습니다.
+
+# 유틸리티 기능
 
 ### 로깅 유틸리티 (loggerUtils.js)
 
@@ -412,7 +422,7 @@ Error: Not run migration 1745056370599_create-pets-table is preceding already ru
 
 ```
 
-migrate 명령마다 `pgmigrations`에 기록이 저장되는데, 해당 파일을 본인이 삭제하여 불일치 한다고 나오는 경우. 해당파일을 복구하여 파일 순서를 복구하는 방법이 권장되나 아예 사용하지 않을 테이블이기에 수동으로 삭제 수행
+migrate 명령마다 `pgmigrations`에 기록이 저장이 저장되는데, 해당 파일을 본인이 삭제하여 불일치 한다고 나오는 경우. 해당파일을 복구하여 파일 순서를 복구하는 방법이 권장되나 아예 사용하지 않을 테이블이기에 수동으로 삭제 수행
 
 ` DELETE FROM pgmigrations WHERE name = '0001_set-updatedAt-default';`
 
@@ -492,7 +502,3 @@ FastAPI의 경우 자동으로 API 명세서가 만들어지는 점을 참고하
 ## transaction 구현
 
 어떤 기능을 transcation으로 만들 것인가?
-단순한 한번의 쿼리로는 해결하기 어려운 복잡한기능 + ACID가 반드시 필요한 기능 단위
-
-1. 펫을 생성
-2. 유저정보 업데이트
